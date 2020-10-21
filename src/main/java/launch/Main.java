@@ -11,6 +11,7 @@ import org.apache.catalina.core.StandardContext;
 import org.apache.catalina.startup.Tomcat;
 import org.apache.catalina.webresources.DirResourceSet;
 import org.apache.catalina.webresources.EmptyResourceSet;
+import org.apache.catalina.webresources.JarResourceSet;
 import org.apache.catalina.webresources.StandardRoot;
 import org.apache.tomcat.util.scan.Constants;
 import org.apache.tomcat.util.scan.StandardJarScanFilter;
@@ -41,6 +42,7 @@ public class Main {
         Tomcat tomcat = new Tomcat();
         Path tempPath = Files.createTempDirectory("tomcat-base-dir");
         tomcat.setBaseDir(tempPath.toString());
+        System.out.println("BASEDir:"+tempPath.toFile().getAbsolutePath());
 
         //The port that we should run on can be set into an environment variable
         //Look for that variable and default to 8080 if it isn't there.
@@ -64,6 +66,10 @@ public class Main {
         // Servlet 3.0 annotation will work
         File additionWebInfClassesFolder = new File(root.getAbsolutePath(), "target/classes");
         WebResourceRoot resources = new StandardRoot(ctx);
+        
+        File jarClassFolder = new File(root.getAbsolutePath(),"lib");
+        DirResourceSet jarResourceSet = new DirResourceSet(resources,"/WEB-INF/lib",jarClassFolder.getAbsolutePath(),"/");
+        resources.addJarResources(jarResourceSet);
 
         WebResourceSet resourceSet;
         if (additionWebInfClassesFolder.exists()) {
