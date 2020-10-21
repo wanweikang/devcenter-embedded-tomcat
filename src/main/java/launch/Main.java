@@ -11,10 +11,7 @@ import org.apache.catalina.core.StandardContext;
 import org.apache.catalina.startup.Tomcat;
 import org.apache.catalina.webresources.DirResourceSet;
 import org.apache.catalina.webresources.EmptyResourceSet;
-import org.apache.catalina.webresources.JarResourceSet;
 import org.apache.catalina.webresources.StandardRoot;
-import org.apache.tomcat.util.scan.Constants;
-import org.apache.tomcat.util.scan.StandardJarScanFilter;
 
 public class Main {
 
@@ -68,8 +65,10 @@ public class Main {
         WebResourceRoot resources = new StandardRoot(ctx);
         
         File jarClassFolder = new File(root.getAbsolutePath(),"lib");
-        DirResourceSet jarResourceSet = new DirResourceSet(resources,"/WEB-INF/lib",jarClassFolder.getAbsolutePath(),"/");
-        resources.addJarResources(jarResourceSet);
+        if(jarClassFolder.exists()) {
+        	DirResourceSet jarResourceSet = new DirResourceSet(resources,"/WEB-INF/lib",jarClassFolder.getAbsolutePath(),"/");
+        	resources.addJarResources(jarResourceSet);
+        }
 
         WebResourceSet resourceSet;
         if (additionWebInfClassesFolder.exists()) {
